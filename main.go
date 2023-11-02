@@ -4,12 +4,6 @@ import (
 	"fmt"
 )
 
-/*
-
-++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.
-
-*/
-
 type Interpreter struct {
 	Memory [100]int 
 	InstPointer int // Instruction Pointer
