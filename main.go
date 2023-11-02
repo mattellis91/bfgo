@@ -8,7 +8,6 @@ import (
 
 ++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.
 
-
 */
 
 type Interpreter struct {
@@ -73,13 +72,19 @@ func (i *Interpreter) Interpret() {
 			case '.':
 				i.SetOutput()
 			case ',':
-				i.GetInput()
+				i.Memory[i.MemPointer] = i.GetInput()
 			case '[':
 				if i.Memory[i.MemPointer] != 0 {
 					i.AddStack = append(i.AddStack, i.InstPointer)
 				} else {
-					for i.Program[i.InstPointer] != ']' {
+					count := 1
+					for count > 0 {
 						i.InstPointer++
+						if i.Program[i.InstPointer] == '[' {
+							count++
+						} else if i.Program[i.InstPointer] == ']' {
+							count--
+						}
 					}
 				}
 			case ']':
@@ -95,6 +100,6 @@ func (i *Interpreter) Interpret() {
 }
 
 func main() {
-	i := NewInterpreter("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.");
+	i := NewInterpreter("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
 	i.Interpret()
 }
