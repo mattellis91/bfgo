@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 )
 
 type Interpreter struct {
@@ -94,6 +95,51 @@ func (i *Interpreter) Interpret() {
 }
 
 func main() {
-	i := NewInterpreter("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
+
+	args := os.Args
+
+	if len(args) > 1 {
+		fileArg := args[1]
+		if len(args) > 2 {
+			fileArg = args[2]
+		}
+		i := NewInterpreter(GetProgStringFromFile(fileArg))
+		i.Interpret()
+		return
+	} else {
+		fmt.Println("File not found. Please provide a file path.")
+	}
+
+	progString := GetProgStringFromFile(args[1])
+	fmt.Println(progString)
+
+	i := NewInterpreter(progString);
 	i.Interpret()
+}
+
+func GetProgStringFromFile(path string) string {
+
+	fmt.Println("Reading file: ", path)
+
+	file, err := os.Open(path)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return ""
+	}
+	defer file.Close()
+
+	stat, err := file.Stat()
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return ""
+	}
+
+	bs := make([]byte, stat.Size())
+	_, err = file.Read(bs)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return ""
+	}
+
+	return string(bs)
 }
