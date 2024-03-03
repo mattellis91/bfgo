@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"flag"
 )
 
 type Interpreter struct {
@@ -98,23 +99,32 @@ func main() {
 
 	args := os.Args
 
-	if len(args) > 1 {
-		fileArg := args[1]
-		if len(args) > 2 {
-			fileArg = args[2]
-		}
-		i := NewInterpreter(GetProgStringFromFile(fileArg))
-		i.Interpret()
-		return
+	useVerbose := flag.Bool("v", false, "Verbose mode")
+
+	flag.Parse()
+
+	if *useVerbose {
+		fmt.Println("Verbose mode enabled")
+		//TODO: Implement verbose mode for debugging
 	} else {
-		fmt.Println("File not found. Please provide a file path.")
+		if len(args) > 1 {
+			fileArg := args[1]
+			if len(args) > 2 {
+				fileArg = args[2]
+			}
+			i := NewInterpreter(GetProgStringFromFile(fileArg))
+			i.Interpret()
+			return
+		} else {
+			fmt.Println("File not found. Please provide a file path.")
+		}
+
+		progString := GetProgStringFromFile(args[1])
+		fmt.Println(progString)
+
+		i := NewInterpreter(progString);
+		i.Interpret()
 	}
-
-	progString := GetProgStringFromFile(args[1])
-	fmt.Println(progString)
-
-	i := NewInterpreter(progString);
-	i.Interpret()
 }
 
 func GetProgStringFromFile(path string) string {
