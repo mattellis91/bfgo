@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"flag"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 type Interpreter struct {
@@ -106,6 +108,12 @@ func main() {
 	if *useVerbose {
 		fmt.Println("Verbose mode enabled")
 		//TODO: Implement verbose mode for debugging
+
+		if _, err := tea.NewProgram(newModel(), tea.WithAltScreen()).Run(); err != nil {
+			fmt.Println("Error while running program:", err)
+			os.Exit(1)
+		}
+
 	} else {
 		if len(args) > 1 {
 			fileArg := args[1]
